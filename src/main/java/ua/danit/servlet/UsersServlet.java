@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 
 @WebServlet(urlPatterns = "/users")
 public class UsersServlet extends HttpServlet{
+    private static Boolean choice;
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         PrintWriter writer = resp.getWriter();
@@ -31,6 +32,11 @@ public class UsersServlet extends HttpServlet{
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.getWriter().write("Submit successful");
+        String userChoice = req.getParameter("choise");
+
+        choice = "Yes".equals(userChoice);
+
+        doGet(req, resp);
+
     }
 }
