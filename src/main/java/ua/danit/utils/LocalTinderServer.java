@@ -5,6 +5,7 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import ua.danit.dao.UsersDAO;
 import ua.danit.servlet.LikedServlet;
+import ua.danit.servlet.MessageServlet;
 import ua.danit.servlet.UsersServlet;
 
 public class LocalTinderServer {
@@ -19,6 +20,8 @@ public class LocalTinderServer {
                         "/users/*");
                 addServlet(new ServletHolder(new LikedServlet(usersDAO)),
                         "/liked/*");
+                addServlet(new ServletHolder(new MessageServlet(usersDAO)),
+                        "/message/*");
 
             }});
             start();
