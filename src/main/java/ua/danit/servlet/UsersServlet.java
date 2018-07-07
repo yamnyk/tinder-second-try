@@ -1,6 +1,9 @@
 package ua.danit.servlet;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import ua.danit.dao.UsersDAO;
 import ua.danit.entity.User;
+import ua.danit.utils.FreeMarkerConfig;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 @WebServlet(urlPatterns = "/users")
 public class UsersServlet extends HttpServlet{
@@ -16,12 +21,26 @@ public class UsersServlet extends HttpServlet{
     private static Boolean choice;
     private int currentUserIndex = 0;
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        if(currentUserIndex >= usersDAO.returnAllUsers().size()){
+            resp.sendRedirect("/liked");
+            currentUserIndex = 0;
+            return;
+        }
+
         PrintWriter writer = resp.getWriter();
+        String tmplName = "htmlFile.html";
 
+        Map<String, Object> var = new HashMap<>();
         User user = usersDAO.getUserByIndex(currentUserIndex);
+        var.put("usr", user);
 
-        writer.write("<!DOCTYPE html>\n" +
+        FreeMarkerConfig.proccesTemplate(writer, var, tmplName);
+
+//        PrintWriter writer = resp.getWriter();
+
+/*        writer.write("<!DOCTYPE html>\n" +
                 "<html lang=\"en\">\n" +
                 "<head>\n" +
                 "    <meta charset=\"UTF-8\">\n" +
@@ -35,7 +54,7 @@ public class UsersServlet extends HttpServlet{
                 "<button name=\"choise\" value='No'>No</button>\n" +
                 "</form>\n" +
                 "</body>\n" +
-                "</html>");
+                "</html>");*/
         currentUserIndex++;
     }
 

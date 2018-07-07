@@ -12,10 +12,13 @@ public class UsersDAO {
         users.add(new User("SluttySlut", "http://www2.news.ykt.ru/upload/image/2016/10/49270/main_big.jpg?1506411572"));
         users.add(new User("Joanna", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpOGFwFUdNH_n-DT6Cx-AhDGI_0zsSzI3Z4nlCeOAZnh50xJnj7g"));
         users.add(new User("Fifa", "https://www.wikihow.com/images/thumb/4/40/Make-Everyone-Love-You-%28Teen-Girls%29-Step-1.jpg/aid2097423-v4-728px-Make-Everyone-Love-You-%28Teen-Girls%29-Step-1.jpg"));
-
     }
 
     public User getUserByIndex(int currentUserIndex) {
         return users.get(currentUserIndex % users.size());
+    }
+
+    public List<User> returnAllUsers(){
+        return users;
     }
 }
