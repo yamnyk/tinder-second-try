@@ -1,6 +1,5 @@
 package ua.danit.servlet;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
+
 import ua.danit.dao.UsersDAO;
 import ua.danit.entity.User;
 import ua.danit.utils.FreeMarkerConfig;
@@ -15,11 +14,15 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebServlet(urlPatterns = "/users")
 public class UsersServlet extends HttpServlet{
-    private UsersDAO usersDAO = new UsersDAO();
+    private UsersDAO usersDAO;
     private static Boolean choice;
     private int currentUserIndex = 0;
+
+    public UsersServlet(UsersDAO usersDAO) {
+        this.usersDAO = usersDAO;
+    }
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -55,15 +58,14 @@ public class UsersServlet extends HttpServlet{
                 "</form>\n" +
                 "</body>\n" +
                 "</html>");*/
-        currentUserIndex++;
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String userChoice = req.getParameter("choise");
 
-        choice = "Yes".equals(userChoice);
-
+        usersDAO.getUserByIndex(currentUserIndex).setLiked("yes".equals(userChoice));
+        currentUserIndex++;
         doGet(req, resp);
 
     }

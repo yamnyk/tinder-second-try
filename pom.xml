@@ -8,13 +8,24 @@
     <artifactId>tinder-second-try</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <properties>
+        <jetty.version>9.4.6.v20170531</jetty.version>
+    </properties>
+
     <dependencies>
+
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>3.1.0</version>
-            <scope>provided</scope>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>${jetty.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlet</artifactId>
+            <version>${jetty.version}</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.freemarker</groupId>
@@ -25,16 +36,6 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
-                <version>9.4.6.v20170531</version>
-                <configuration>
-                    <httpConnector>
-                        <port>8081</port>
-                    </httpConnector>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
