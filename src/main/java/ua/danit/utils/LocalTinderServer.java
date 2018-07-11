@@ -17,7 +17,6 @@ public class LocalTinderServer {
 
     public void start(String port) throws Exception {
         final UsersDAO usersDAO = new UsersDAO();
-//        final LikedDAO likedDAO = new LikedDAO();
 
         new Server(Integer.parseInt(port)){{
             setHandler(new ServletContextHandler(){{
