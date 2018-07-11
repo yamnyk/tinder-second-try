@@ -1,13 +1,16 @@
 package ua.danit.entity;
 
 public class User {
+    private int id;
     private String name;
-    private String imgURL;
+    private String photo;
     private Boolean liked;
 
-    public User(String name, String imgURL) {
+    public User(int id, String name, String photo, Boolean liked) {
+        this.id = id;
         this.name = name;
-        this.imgURL = imgURL;
+        this.photo = photo;
+        this.liked = liked;
     }
 
     public Boolean getLiked() {
@@ -26,11 +29,11 @@ public class User {
         this.name = name;
     }
 
-    public String getImgURL() {
-        return imgURL;
+    public String getPhoto() {
+        return photo;
     }
 
-    public void setImgURL(String imgURL) {
-        this.imgURL = imgURL;
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 }

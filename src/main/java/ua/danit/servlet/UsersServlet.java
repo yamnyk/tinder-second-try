@@ -51,7 +51,7 @@ public class UsersServlet extends HttpServlet{
                 "</head>\n" +
                 "<body>\n" +
                 "<h1>"+user.getName()+"</h1>\n" +
-                "<img width=\"400\" src='"+user.getImgURL()+"'>\n" +
+                "<img width=\"400\" src='"+user.getPhoto()+"'>\n" +
                 "<form acton='/users' method='POST'>\n" +
                 "<br><button name=\"choise\" value='Yes'>Yes</button>\n" +
                 "<button name=\"choise\" value='No'>No</button>\n" +
