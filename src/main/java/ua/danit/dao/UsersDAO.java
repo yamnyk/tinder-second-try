@@ -6,7 +6,6 @@ import ua.danit.utils.DBConnector;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class UsersDAO {
 
@@ -28,7 +27,9 @@ public class UsersDAO {
         ResultSet rSet = getResultSet("SELECT * FROM zozich_users WHERE liked IS NULL LIMIT 1");
 
         try{
-            return getUserIfRSetNotNull(rSet);
+            if (rSet != null) {
+                return getUserIfRSetNotNull(rSet);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -39,11 +40,12 @@ public class UsersDAO {
         try(PreparedStatement statement =
                     getPreparedStatement("UPDATE zozich_users SET liked=? WHERE id =?")){
 
-            statement.setBoolean(1, liked);
-            statement.setInt(2, id);
+            if (statement != null) {
+                statement.setBoolean(1, liked);
+                statement.setInt(2, id);
 
-            statement.executeUpdate();
-
+                statement.executeUpdate();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
