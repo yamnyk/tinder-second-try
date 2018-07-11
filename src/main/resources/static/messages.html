@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Liked page</title>
+    <title>Messages</title>
 </head>
 <body>
-    <h1>You liked this bitches</h1>
-    <#list messages as message>
-        <div>
-            <span>${message.text}</span>
-        </div>
-    </#list>
+<h1>Messages</h1>
+<#list messages as message>
+<h2>
+    ${message}
+</h2>
+</#list>
 </body>
 </html>

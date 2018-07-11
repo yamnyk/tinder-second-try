@@ -16,8 +16,6 @@ import java.util.Map;
 
 public class UsersServlet extends HttpServlet{
     private UsersDAO usersDAO;
-    private static Boolean choice;
-    private int currentUserIndex = 0;
 
     public UsersServlet(UsersDAO usersDAO) {
         this.usersDAO = usersDAO;
@@ -26,46 +24,28 @@ public class UsersServlet extends HttpServlet{
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        if(currentUserIndex >= usersDAO.returnAllUsers().size()){
+        PrintWriter pw = resp.getWriter();
+
+        Map<String, Object> variables = new HashMap<>();
+        User user = usersDAO.getNotLikedUser();
+
+        if(user == null){
             resp.sendRedirect("/liked");
-            currentUserIndex = 0;
             return;
         }
 
-        PrintWriter writer = resp.getWriter();
-        String tmplName = "htmlFile.html";
+        variables.put("user", user);
+        FreeMarkerConfig.proccesTemplate(pw, variables, "users.html",this.getClass());
 
-        Map<String, Object> var = new HashMap<>();
-        User user = usersDAO.getUserByIndex(currentUserIndex);
-        var.put("usr", user);
-
-        FreeMarkerConfig.proccesTemplate(writer, var, tmplName);
-
-//        PrintWriter writer = resp.getWriter();
-
-/*        writer.write("<!DOCTYPE html>\n" +
-                "<html lang=\"en\">\n" +
-                "<head>\n" +
-                "    <meta charset=\"UTF-8\">\n" +
-                "    <title>Index</title>\n" +
-                "</head>\n" +
-                "<body>\n" +
-                "<h1>"+user.getName()+"</h1>\n" +
-                "<img width=\"400\" src='"+user.getPhoto()+"'>\n" +
-                "<form acton='/users' method='POST'>\n" +
-                "<br><button name=\"choise\" value='Yes'>Yes</button>\n" +
-                "<button name=\"choise\" value='No'>No</button>\n" +
-                "</form>\n" +
-                "</body>\n" +
-                "</html>");*/
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String userChoice = req.getParameter("choise");
+        String userId = req.getParameter("userId");
 
-        usersDAO.getUserByIndex(currentUserIndex).setLiked("yes".equals(userChoice));
-        currentUserIndex++;
+        usersDAO.saveLike(userId, "yes".equals(userChoice));
+
         doGet(req, resp);
 
     }

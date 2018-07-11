@@ -14,12 +14,11 @@ import java.util.Map;
 
 public class FreeMarkerConfig {
 
-    public static void proccesTemplate(PrintWriter writer, Map<String, Object> var, String tmplName) throws IOException {
+    public static void proccesTemplate(PrintWriter writer, Map<String, Object> var, String tmplName, Class servletClass) throws IOException {
         Configuration cfg = new Configuration(Configuration.VERSION_2_3_28);
         String appDir = System.getProperty("user.dir");
         cfg = new Configuration(Configuration.VERSION_2_3_28);
-        cfg.setDirectoryForTemplateLoading(new File(appDir
-                + "/src/main/resources/static/"));
+        cfg.setClassLoaderForTemplateLoading(servletClass.getClassLoader(), "/static");
         cfg.setDefaultEncoding("UTF-8");
         cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         cfg.setLogTemplateExceptions(false);

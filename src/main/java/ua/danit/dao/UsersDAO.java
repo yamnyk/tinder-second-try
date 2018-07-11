@@ -34,12 +34,12 @@ public class UsersDAO {
         return null;
     }
 
-    public void saveLike(int id, boolean liked){
+    public void saveLike(String id, boolean liked){
         try(PreparedStatement statement =
                     getPreparedStatement("UPDATE zozich_users SET liked=? WHERE id =?")){
 
             statement.setBoolean(1, liked);
-            statement.setInt(2, id);
+            statement.setInt(2, Integer.parseInt(id));
 
             statement.executeUpdate();
         } catch (NullPointerException | SQLException e) {

@@ -5,7 +5,6 @@ import ua.danit.entity.User;
 import ua.danit.utils.FreeMarkerConfig;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,10 +24,12 @@ public class LikedServlet extends HttpServlet{
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         PrintWriter writer = resp.getWriter();
+
         Map<String, Object> var = new HashMap<>();
         List<User> users = usersDAO.getLikedUsers();
+
         var.put("users", users);
 
-        FreeMarkerConfig.proccesTemplate(writer, var, "liked.html");
+        FreeMarkerConfig.proccesTemplate(writer, var, "liked.html", this.getClass());
     }
 }
