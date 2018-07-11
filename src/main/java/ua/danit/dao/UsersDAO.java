@@ -54,8 +54,10 @@ public class UsersDAO {
         ResultSet rSet = getResultSet("SELECT * FROM zozich_users WHERE liked IS TRUE");
 
         try{
-        while(rSet.next()){
-                users.add(getUserFromResultSet(rSet));
+            if (rSet != null) {
+                while(rSet.next()){
+                        users.add(getUserFromResultSet(rSet));
+                    }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -66,14 +68,15 @@ public class UsersDAO {
     public User getUserByLoginAndPassword(String login, String pass){
         try(PreparedStatement preparedStatement = getPreparedStatement("SELECT * FROM zozich_users" +
                 "WHERE name=? AND password=?")){
-            preparedStatement.setString(1, login);
-            preparedStatement.setString(2, pass);
+            if (preparedStatement != null) {
+                preparedStatement.setString(1, login);
+                preparedStatement.setString(2, pass);
+                preparedStatement.execute();
 
-            preparedStatement.execute();
+                ResultSet rSet = preparedStatement.executeQuery();
 
-            ResultSet rSet = preparedStatement.executeQuery();
-
-            return getUserIfRSetNotNull(rSet);
+                return getUserIfRSetNotNull(rSet);
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
