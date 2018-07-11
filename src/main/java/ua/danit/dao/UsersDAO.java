@@ -27,10 +27,8 @@ public class UsersDAO {
         ResultSet rSet = getResultSet("SELECT * FROM zozich_users WHERE liked IS NULL LIMIT 1");
 
         try{
-            if (rSet != null) {
-                return getUserIfRSetNotNull(rSet);
-            }
-        } catch (Exception e) {
+            return getUserIfRSetNotNull(rSet);
+        } catch (NullPointerException | SQLException e) {
             e.printStackTrace();
         }
         return null;
@@ -40,13 +38,11 @@ public class UsersDAO {
         try(PreparedStatement statement =
                     getPreparedStatement("UPDATE zozich_users SET liked=? WHERE id =?")){
 
-            if (statement != null) {
-                statement.setBoolean(1, liked);
-                statement.setInt(2, id);
+            statement.setBoolean(1, liked);
+            statement.setInt(2, id);
 
-                statement.executeUpdate();
-            }
-        } catch (SQLException e) {
+            statement.executeUpdate();
+        } catch (NullPointerException | SQLException e) {
             e.printStackTrace();
         }
     }
@@ -58,8 +54,8 @@ public class UsersDAO {
         try{
             if (rSet != null) {
                 while(rSet.next()){
-                        users.add(getUserFromResultSet(rSet));
-                    }
+                    users.add(getUserFromResultSet(rSet));
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -70,17 +66,16 @@ public class UsersDAO {
     public User getUserByLoginAndPassword(String login, String pass){
         try(PreparedStatement preparedStatement = getPreparedStatement("SELECT * FROM zozich_users" +
                 "WHERE name=? AND password=?")){
-            if (preparedStatement != null) {
-                preparedStatement.setString(1, login);
-                preparedStatement.setString(2, pass);
-                preparedStatement.execute();
 
-                ResultSet rSet = preparedStatement.executeQuery();
+            preparedStatement.setString(1, login);
+            preparedStatement.setString(2, pass);
+            preparedStatement.execute();
 
-                return getUserIfRSetNotNull(rSet);
-            }
+            ResultSet rSet = preparedStatement.executeQuery();
 
-        } catch (SQLException e) {
+            return getUserIfRSetNotNull(rSet);
+
+        } catch (NullPointerException | SQLException e) {
             e.printStackTrace();
         }
         return null;
@@ -99,17 +94,17 @@ public class UsersDAO {
     }
     private PreparedStatement getPreparedStatement(String sql){
         try(Connection connection = DBConnector.getConnection();
-        PreparedStatement pStatement = connection.prepareStatement(sql)){
+            PreparedStatement pStatement = connection.prepareStatement(sql)){
 
             return pStatement;
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-         return null;
+        return null;
     }
 
-    private User getUserIfRSetNotNull(ResultSet rSet) throws SQLException {
+    private User getUserIfRSetNotNull(ResultSet rSet) throws NullPointerException, SQLException {
         if(rSet.next()){
             return getUserFromResultSet(rSet);
         }
