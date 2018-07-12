@@ -30,7 +30,7 @@ public class LoginFilter implements Filter {
 
         if(cookies != null){
             for (Cookie cookie : cookies) {
-                if("user-id".equals(cookie.getName())){
+                if("userId".equals(cookie.getName())){
                     userIdFound = true;
                     break;
                 }

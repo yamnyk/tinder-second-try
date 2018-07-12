@@ -24,10 +24,14 @@ public class UsersDAO {
     }
 
     public User getNotLikedUser(){
-        ResultSet rSet = getResultSet("SELECT * FROM zozich_users WHERE liked IS NULL LIMIT 1");
-
-        try{
-            return getUserIfRSetNotNull(rSet);
+        try (
+                Connection connection = DBConnector.getConnectionToDB();
+                Statement statement = connection.createStatement();
+        ) {
+            ResultSet rSet = statement.executeQuery("SELECT * FROM zozich_users WHERE liked IS NULL LIMIT 1");
+            if(rSet.next()){
+                return getUserFromResultSet(rSet);
+            }
         } catch (NullPointerException | SQLException e) {
             e.printStackTrace();
         }
@@ -35,13 +39,14 @@ public class UsersDAO {
     }
 
     public void saveLike(String id, boolean liked){
-        try(PreparedStatement statement =
-                    getPreparedStatement("UPDATE zozich_users SET liked=? WHERE id =?")){
+        try(Connection connection = DBConnector.getConnectionToDB();
+            PreparedStatement preparedStatement = connection
+                    .prepareStatement("UPDATE zozich_users SET liked=? WHERE id =?")){
 
-            statement.setBoolean(1, liked);
-            statement.setInt(2, Integer.parseInt(id));
+            preparedStatement.setBoolean(1, liked);
+            preparedStatement.setInt(2, Integer.parseInt(id));
 
-            statement.executeUpdate();
+            preparedStatement.executeUpdate();
         } catch (NullPointerException | SQLException e) {
             e.printStackTrace();
         }
@@ -49,9 +54,11 @@ public class UsersDAO {
 
     public List<User> getLikedUsers(){
         List<User> users = new ArrayList<>();
-        ResultSet rSet = getResultSet("SELECT * FROM zozich_users WHERE liked IS TRUE");
-
-        try{
+        try (
+                Connection connection = DBConnector.getConnectionToDB();
+                Statement statement = connection.createStatement();
+        ) {
+            ResultSet rSet = statement.executeQuery("SELECT * FROM zozich_users WHERE liked IS TRUE");
             if (rSet != null) {
                 while(rSet.next()){
                     users.add(getUserFromResultSet(rSet));
@@ -64,49 +71,21 @@ public class UsersDAO {
     }
 
     public User getUserByLoginAndPassword(String login, String pass){
-        try(PreparedStatement preparedStatement = getPreparedStatement("SELECT * FROM zozich_users" +
-                "WHERE name=? AND password=?")){
-
+        try(Connection connection = DBConnector.getConnectionToDB();
+            PreparedStatement preparedStatement = connection
+                    .prepareStatement("SELECT * FROM zozich_users WHERE name=? AND password=?")){
             preparedStatement.setString(1, login);
             preparedStatement.setString(2, pass);
             preparedStatement.execute();
 
             ResultSet rSet = preparedStatement.executeQuery();
 
-            return getUserIfRSetNotNull(rSet);
+            if(rSet.next()){
+                return getUserFromResultSet(rSet);
+            }
 
         } catch (NullPointerException | SQLException e) {
             e.printStackTrace();
-        }
-        return null;
-    }
-
-    private ResultSet getResultSet(String sql){
-        try(Connection connection = DBConnector.getConnection();
-            Statement statement = connection.createStatement()){
-
-            return statement.executeQuery(sql);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-    private PreparedStatement getPreparedStatement(String sql){
-        try(Connection connection = DBConnector.getConnection();
-            PreparedStatement pStatement = connection.prepareStatement(sql)){
-
-            return pStatement;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private User getUserIfRSetNotNull(ResultSet rSet) throws NullPointerException, SQLException {
-        if(rSet.next()){
-            return getUserFromResultSet(rSet);
         }
         return null;
     }

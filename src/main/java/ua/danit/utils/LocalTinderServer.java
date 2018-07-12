@@ -7,6 +7,7 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import ua.danit.dao.UsersDAO;
 import ua.danit.filter.LoginFilter;
 import ua.danit.servlet.LikedServlet;
+import ua.danit.servlet.LoginServlet;
 import ua.danit.servlet.MessageServlet;
 import ua.danit.servlet.UsersServlet;
 
@@ -25,7 +26,9 @@ public class LocalTinderServer {
                 addServlet(new ServletHolder(new LikedServlet(usersDAO)),
                         "/liked/*");
                 addServlet(new ServletHolder(new MessageServlet(usersDAO)),
-                        "/message/*");
+                        "/messages/*");
+                addServlet(new ServletHolder(new LoginServlet(usersDAO)),
+                        "/login");
                 addFilter(new FilterHolder(new LoginFilter()),"/*",
                         EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD));
             }});

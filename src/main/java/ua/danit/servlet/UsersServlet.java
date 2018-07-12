@@ -41,10 +41,11 @@ public class UsersServlet extends HttpServlet{
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String userChoice = req.getParameter("choise");
+        String userChoice = req.getParameter("choice");
         String userId = req.getParameter("userId");
 
-        usersDAO.saveLike(userId, "yes".equals(userChoice));
+        boolean ch = "yes".equals(userChoice);
+        usersDAO.saveLike(userId, ch);
 
         doGet(req, resp);
 
